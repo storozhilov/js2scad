@@ -1,0 +1,5 @@
+project(${CMAKE_PROJECT_NAME})
+include_directories (${CMAKE_SOURCE_DIR}/include ${SPIDERMONKEY_INCLUDE_DIRS})
+file (GLOB SRC_LIST "*.cxx")
+add_executable (${CMAKE_PROJECT_NAME} ${SRC_LIST})
+target_link_libraries (${CMAKE_PROJECT_NAME} ${JS2SCAD_LIBRARY_SHARED} ${SPIDERMONKEY_LIBRARIES})
