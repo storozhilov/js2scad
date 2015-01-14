@@ -16,10 +16,14 @@ class TranslatorImpl
 public:
 	//! Creates JS to OpenSCAD translator
 	/*!
-	 * \param cerr Error output stream
+	 * \param in Reference to standard input stream
+	 * \param out Reference to standard output stream
+	 * \param err Reference to standard error output stream
+	 * \param log Reference to error output stream
 	 * \param indentWidth Indent width
 	 */
-	TranslatorImpl(std::ostream& cerr, size_t indentWidth = 2U);
+	TranslatorImpl(std::istream& in, std::ostream& out, std::ostream& err,
+			std::ostream& log, size_t indentWidth = 2U);
 	~TranslatorImpl();
 
 	inline size_t getIndentWidth() const
@@ -28,9 +32,9 @@ public:
 	}
 
 	//! Translates program from in stream to out stream
-	void translate(std::istream& cin, std::ostream& cout, const char * filename);
+	void translate(std::istream& in, std::ostream& out, const char * filename);
 	//! Translates program from string to out stream
-	void translate(const std::string& program, std::ostream& cout, const char * filename);
+	void translate(const std::string& program, std::ostream& out, const char * filename);
 private:
 	typedef std::deque<std::string> ErrorsContainer;
 	// Solids
@@ -74,7 +78,10 @@ private:
 	static bool toJsBool(JSContext * cx, jsval value, JSBool& result);
 	//static bool toSupportedObjectsVector(JSContext * cx, jsval value, std::vector<AbstractObject>& result);
 	
-	std::ostream& _cerr;
+	std::istream& _in;
+	std::ostream& _out;
+	std::ostream& _err;
+	std::ostream& _log;
 	size_t _indentWidth;
 	JSRuntime * _rt;
 	JSContext * _cx;

@@ -26,7 +26,7 @@ cityTyre.rotate([90, 0, 0]);
 Then, translate JS code into [OpenSCAD][1] format and open result in [OpenSCAD][1]:
 
 ```
-$ js2scad < tyre.js > tyre.scad
+$ js2scad -i tyre.js -o tyre.scad
 $ openscad tyre.scad
 ```
 

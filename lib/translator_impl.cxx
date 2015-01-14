@@ -8,8 +8,12 @@ using namespace JS;
 namespace js2scad
 {
 
-TranslatorImpl::TranslatorImpl(std::ostream& cerr, size_t indentWidth) :
-	_cerr(cerr),
+TranslatorImpl::TranslatorImpl(std::istream& in, std::ostream& out, std::ostream& err,
+		std::ostream& log, size_t indentWidth) :
+	_in(in),
+	_out(out),
+	_err(err),
+	_log(log),
 	_indentWidth(indentWidth),
 	_rt(),
 	_cx(),
@@ -252,13 +256,13 @@ TranslatorImpl::~TranslatorImpl()
 	JS_DestroyRuntime(_rt);
 }
 
-void TranslatorImpl::translate(std::istream& cin, std::ostream& cout, const char * filename)
+void TranslatorImpl::translate(std::istream& in, std::ostream& out, const char * filename)
 {
 	std::istreambuf_iterator<char> eos;
-	translate(std::string(std::istreambuf_iterator<char>(cin), eos), cout, filename);
+	translate(std::string(std::istreambuf_iterator<char>(in), eos), out, filename);
 }
 
-void TranslatorImpl::translate(const std::string& program, std::ostream& cout, const char * filename)
+void TranslatorImpl::translate(const std::string& program, std::ostream& out, const char * filename)
 {
 	_objectsCollection.reset();
 	_errors.clear();
@@ -272,11 +276,11 @@ void TranslatorImpl::translate(const std::string& program, std::ostream& cout, c
 				msg << std::endl;
 			}
 			msg << *i;
-			_cerr << (*i) << std::endl;
+			_err << (*i) << std::endl;
 		}
 		throw std::runtime_error(msg.str());
 	}
-	_objectsCollection.toScad(cout);
+	_objectsCollection.toScad(out);
 }
 
 void TranslatorImpl::errorReporter(JSContext * cx, const char * message, JSErrorReport * report)

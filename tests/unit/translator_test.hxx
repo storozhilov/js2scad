@@ -25,13 +25,15 @@ protected:
 	virtual void SetUp()
 	{
 		resetStreams();
-		translator.reset(new Translator(cerr));
+		translator.reset(new Translator(cin, cout, cerr, clog));
 	}
 	virtual void TearDown()
 	{}
 
+	std::istringstream cin;
 	std::ostringstream cout;
 	std::ostringstream cerr;
+	std::ostringstream clog;
 	std::auto_ptr<Translator> translator;	
 };
 

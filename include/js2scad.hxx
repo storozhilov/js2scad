@@ -14,29 +14,33 @@ class Translator
 public:
 	//! Creates JS to OpenSCAD translator
 	/*!
-	 * \param cerr Reference to error output stream to write error messages to
+	 * \param in Reference to standard input stream
+	 * \param out Reference to standard output stream
+	 * \param err Reference to standard error output stream
+	 * \param log Reference to error output stream
 	 * \param indentWidth Result indent width
 	 */
-	Translator(std::ostream& cerr, size_t indentWidth = 2U);
+	Translator(std::istream& in, std::ostream& out,
+			std::ostream& err, std::ostream& log, size_t indentWidth = 2U);
 	//! Destroys JS to OpenSCAD translator
 	~Translator();
 
 	//! Translates program from input stream to output stream
 	/*!
 	 * \note Throws std::runtime_error exception on error
-	 * \param cin Reference to input stream to read program from
-	 * \param cout Reference to input stream to write result to
+	 * \param in Reference to input stream to read program from
+	 * \param out Reference to input stream to write result to
 	 * \param filename Name of the input file (informational - used in JS egnine)
 	 */
-	void translate(std::istream& cin, std::ostream& cout, const char * filename);
+	void translate(std::istream& in, std::ostream& out, const char * filename);
 	//! Translates program from string to out stream
 	/*!
 	 * \note Throws std::runtime_error exception on error
 	 * \param program Reference to input stream to read program from
-	 * \param cout Reference to input stream to write result to
+	 * \param out Reference to input stream to write result to
 	 * \param filename Name of the input file (informational - used in JS egnine)
 	 */
-	void translate(const std::string& program, std::ostream& cout, const char * filename);
+	void translate(const std::string& program, std::ostream& out, const char * filename);
 private:
 	TranslatorImpl * _translatorImpl;
 };
