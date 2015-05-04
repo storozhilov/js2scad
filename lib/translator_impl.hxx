@@ -47,6 +47,8 @@ private:
 	static JSClass intersectionInstanceClass;
 	static JSClass differenceInstanceClass;
 
+	// General methods
+	static JSBool includeFunction(JSContext *cx, uintN argc, jsval *vp);
 	// Transformations
 	static JSBool translateMethod(JSContext *cx, uintN argc, jsval *vp);
 	static JSBool scaleMethod(JSContext *cx, uintN argc, jsval *vp);
@@ -72,6 +74,7 @@ private:
 	static bool isSupportedObject(JSContext * cx, jsval obj);
 
 	static bool toJsDouble(JSContext * cx, jsval value, jsdouble& result);
+	static bool toString(JSContext * cx, jsval value, std::string& result);
 	static JSObject * toJsArray(JSContext * cx, jsval value, jsuint& len);
 	static bool toJsDoubleVector(JSContext * cx, jsval value, std::vector<jsdouble>& result);
 	static bool toJsDoubleVector(JSContext * cx, jsval * arr, size_t len, std::vector<jsdouble>& result);

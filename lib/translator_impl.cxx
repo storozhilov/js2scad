@@ -58,6 +58,13 @@ TranslatorImpl::TranslatorImpl(std::istream& in, std::ostream& out, std::ostream
 	if (_scadNamespace == NULL) {
 		throw std::runtime_error("'scad' object initialization error");
 	}
+	// TODO: Plugin system and 'plugin' module with 'plugin.include()' and 'plugin.load()' methods
+	// Include function
+	JSFunction * includeJsFunction = JS_DefineFunction(_cx, _scadNamespace, "include",
+			includeFunction, 0, 0);
+	if (includeJsFunction == NULL) {
+		throw std::runtime_error("'scad.include()' function object initialization error");
+	}
 	// Registering abstract SCAD object
 	_abstractScadObject = JS_DefineObject(_cx, _scadNamespace, "AbstractObject", NULL, NULL, 0);
 	if (_abstractScadObject == NULL) {
@@ -317,9 +324,29 @@ bool TranslatorImpl::toJsDouble(JSContext * cx, jsval value, jsdouble& result)
 		return false;
 	}
 	if (!JS_ValueToNumber(cx, value, &result)) {
-		JS_ReportError(cx, "Converting Number to jsdouble error");
+		JS_ReportError(cx, "%s: Converting Number to jsdouble error", __PRETTY_FUNCTION__);
 		return false;
 	}
+	return true;
+}
+
+bool TranslatorImpl::toString(JSContext * cx, jsval value, std::string& result)
+{
+	if (!JSVAL_IS_STRING(value)) {
+		return false;
+	}
+	size_t encodedLength = JS_GetStringEncodingLength(cx, JSVAL_TO_STRING(value));
+	if (encodedLength == static_cast<size_t>(-1)) {
+		JS_ReportError(cx, "%s: Error fetching encoded string length", __PRETTY_FUNCTION__);
+		return false;
+	}
+	std::vector<char> buf(encodedLength);
+	encodedLength = JS_EncodeStringToBuffer(JSVAL_TO_STRING(value), &buf[0U], buf.size());
+	if (encodedLength == static_cast<size_t>(-1)) {
+		JS_ReportError(cx, "%s: String encoding error", __PRETTY_FUNCTION__);
+		return false;
+	}
+	result.assign(&buf[0U], buf.size());
 	return true;
 }
 
